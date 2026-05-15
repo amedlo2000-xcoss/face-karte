@@ -1,4 +1,4 @@
-const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages'
+const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions'
 
 const SYSTEM_PROMPT = `あなたは顔診断の専門家です。送られてきた顔写真を詳細に分析し、必ず以下のJSON形式のみで返答してください。説明文や前置きは一切不要です。JSONのみ返してください。
 
@@ -57,33 +57,33 @@ const SYSTEM_PROMPT = `あなたは顔診断の専門家です。送られてき
 }`
 
 export async function analyzeImage(base64Image, mimeType) {
-  const apiKey = import.meta.env.VITE_CLAUDE_API_KEY
-  if (!apiKey || apiKey === 'your_key_here') {
-    throw new Error('.env の VITE_CLAUDE_API_KEY に有効な Claude API キーを設定してください')
+  const apiKey = import.meta.env.VITE_OPENAI_API_KEY
+  if (!apiKey || apiKey === 'your_openai_key_here') {
+    throw new Error('.env の VITE_OPENAI_API_KEY に有効な OpenAI API キーを設定してください')
   }
 
-  const response = await fetch(CLAUDE_API_URL, {
+  const response = await fetch(OPENAI_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-calls': 'true',
+      'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: 'claude-opus-4-6',
+      model: 'gpt-4o',
       max_tokens: 2048,
-      system: SYSTEM_PROMPT,
       messages: [
+        {
+          role: 'system',
+          content: SYSTEM_PROMPT,
+        },
         {
           role: 'user',
           content: [
             {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mimeType,
-                data: base64Image,
+              type: 'image_url',
+              image_url: {
+                url: `data:${mimeType};base64,${base64Image}`,
+                detail: 'high',
               },
             },
             {
@@ -102,7 +102,7 @@ export async function analyzeImage(base64Image, mimeType) {
   }
 
   const result = await response.json()
-  const text = result.content?.[0]?.text ?? ''
+  const text = result.choices?.[0]?.message?.content ?? ''
   const jsonMatch = text.match(/\{[\s\S]*\}/)
   if (!jsonMatch) throw new Error('JSONの解析に失敗しました')
   return JSON.parse(jsonMatch[0])
