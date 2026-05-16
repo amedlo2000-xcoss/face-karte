@@ -1,6 +1,8 @@
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions'
 
-const SYSTEM_PROMPT = `あなたはCharm Score AIの分析エンジンです。
+const SYSTEM_PROMPT = `必ずJSON形式のみで返答してください。説明文や前置きは一切不要です。
+
+あなたはCharm Score AIの分析エンジンです。
 写真から「第一印象・清潔感・魅力形成・雰囲気・生活管理状態」を総合分析し、
 以下のJSON形式のみで返してください。文章は一切不要です。
 
@@ -85,6 +87,7 @@ export async function analyzeImage(base64Image, mimeType) {
     body: JSON.stringify({
       model: 'gpt-4o',
       max_tokens: 3000,
+      response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
@@ -117,7 +120,14 @@ export async function analyzeImage(base64Image, mimeType) {
 
   const result = await response.json()
   const text = result.choices?.[0]?.message?.content ?? ''
+  console.log('OpenAI response text:', text)
   const jsonMatch = text.match(/\{[\s\S]*\}/)
-  if (!jsonMatch) throw new Error('JSONの解析に失敗しました')
-  return JSON.parse(jsonMatch[0])
+  if (!jsonMatch) {
+    throw new Error(`JSONの解析に失敗しました。APIレスポンス: ${text.slice(0, 200)}`)
+  }
+  try {
+    return JSON.parse(jsonMatch[0])
+  } catch (e) {
+    throw new Error(`JSONのパースに失敗しました: ${e.message}。レスポンス先頭: ${text.slice(0, 200)}`)
+  }
 }
