@@ -60,10 +60,10 @@ export default function KartePage() {
         color: '#fff',
       }}>
         <div style={{ fontSize: 10, letterSpacing: '0.3em', opacity: 0.85, marginBottom: 4 }}>
-          AI FACE ANALYSIS
+          AI CHARM ANALYSIS
         </div>
         <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '0.1em' }}>
-          顔診断カルテ
+          Charm Score AI
         </div>
       </div>
 
@@ -123,7 +123,7 @@ export default function KartePage() {
             }} />
             <style>{`@keyframes karte-spin { to { transform: rotate(360deg); } }`}</style>
             <div style={{ fontSize: 15, color: '#a07840', fontWeight: 600, letterSpacing: '0.1em' }}>
-              Claude が分析中...
+              Charm Score AI が分析中...
             </div>
             <div style={{ fontSize: 12, color: '#999', marginTop: 8 }}>
               少々お待ちください（30秒〜1分程度）
