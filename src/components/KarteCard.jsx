@@ -74,7 +74,15 @@ function SectionTitle({ children }) {
   )
 }
 
-export default function KarteCard({ data, karteRef }) {
+function formatDate() {
+  const d = new Date()
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}.${m}.${day}`
+}
+
+export default function KarteCard({ data, karteRef, imageDataUrl }) {
   if (!data) return null
 
   return (
@@ -108,6 +116,46 @@ export default function KarteCard({ data, karteRef }) {
         </div>
         <div style={{ margin: '8px auto 0', width: 40, height: 1, background: 'rgba(255,255,255,0.6)' }} />
       </div>
+
+      {/* 診断写真 */}
+      {imageDataUrl && (
+        <div style={{
+          background: '#fdf8f2',
+          padding: '16px 0 12px',
+          textAlign: 'center',
+          borderBottom: `1px solid ${GOLD_LIGHT}`,
+        }}>
+          <div style={{
+            fontSize: 10,
+            color: '#9a7a3a',
+            letterSpacing: '0.2em',
+            marginBottom: 10,
+          }}>
+            PHOTO
+          </div>
+          <img
+            src={imageDataUrl}
+            alt="診断写真"
+            style={{
+              width: 200,
+              height: 250,
+              objectFit: 'cover',
+              borderRadius: 12,
+              border: '1px solid #e8d5a3',
+              display: 'block',
+              margin: '0 auto',
+            }}
+          />
+          <div style={{
+            marginTop: 10,
+            fontSize: 10,
+            color: '#9a7a3a',
+            letterSpacing: '0.12em',
+          }}>
+            {formatDate()} Analyzed by AI
+          </div>
+        </div>
+      )}
 
       {/* 第一印象バナー */}
       <div style={{

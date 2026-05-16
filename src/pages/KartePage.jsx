@@ -162,7 +162,7 @@ export default function KartePage() {
         {/* 結果カルテ */}
         {status === 'done' && karteData && (
           <div>
-            <KarteCard karteRef={karteRef} data={karteData} />
+            <KarteCard karteRef={karteRef} data={karteData} imageDataUrl={previewUrl} />
 
             <div style={{ textAlign: 'center', margin: '20px 0 12px' }}>
               <KarteShareButton karteRef={karteRef} />
