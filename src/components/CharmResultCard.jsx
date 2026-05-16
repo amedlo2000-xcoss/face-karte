@@ -92,6 +92,78 @@ export default function CharmResultCard({ data, imageDataUrl }) {
         >
           📥 診断結果を画像保存
         </button>
+
+        {/* SNSシェアボタン */}
+        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+          {/* LINE */}
+          <a
+            href="https://social-plugins.line.me/lineit/share?url=https://face-karte.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#06C755",
+              color: "#fff",
+              border: "none",
+              borderRadius: 50,
+              padding: "10px 0",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+          >
+            LINEでシェア
+          </a>
+
+          {/* X（Twitter） */}
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Charm Score AIで診断したら${charmScore}点・「${resultTitle}」でした！ #CharmScoreAI #第一印象診断`)}&url=https://face-karte.vercel.app`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#000000",
+              color: "#fff",
+              border: "none",
+              borderRadius: 50,
+              padding: "10px 0",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+          >
+            Xでシェア
+          </a>
+
+          {/* Instagram */}
+          <button
+            onClick={async () => {
+              await handleSave();
+              alert("画像を保存しました！Instagramアプリで投稿してください");
+            }}
+            style={{
+              flex: 1,
+              background: "linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)",
+              color: "#fff",
+              border: "none",
+              borderRadius: 50,
+              padding: "10px 0",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            Instagram用に保存
+          </button>
+        </div>
       </div>
 
       {/* 画像化対象カード */}
