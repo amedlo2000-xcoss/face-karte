@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import CameraGuide from '../components/CameraGuide'
 import KarteCard from '../components/KarteCard'
 import KarteShareButton from '../components/KarteShareButton'
+import CharmResultCard from '../components/CharmResultCard'
 import { analyzeImage } from '../services/analyzeService'
 
 export default function KartePage() {
@@ -167,6 +168,8 @@ export default function KartePage() {
             <div style={{ textAlign: 'center', margin: '20px 0 12px' }}>
               <KarteShareButton karteRef={karteRef} />
             </div>
+
+            <CharmResultCard data={karteData} imageDataUrl={previewUrl} />
 
             <div style={{ textAlign: 'center' }}>
               <button
