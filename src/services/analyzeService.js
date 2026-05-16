@@ -1,59 +1,46 @@
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions'
 
-const SYSTEM_PROMPT = `あなたは顔診断の専門家です。送られてきた顔写真を詳細に分析し、必ず以下のJSON形式のみで返答してください。説明文や前置きは一切不要です。JSONのみ返してください。
+const SYSTEM_PROMPT = `あなたはCharm Score AIの分析エンジンです。
+アップロードされた写真から「第一印象・清潔感・整え度・雰囲気」を総合的に分析し、
+以下のJSON形式のみで返答してください。余計な文章は一切不要です。
+
+重要: Charm Scoreは単なる顔立ちではなく、
+「清潔感・整え度・印象管理・雰囲気形成」を重視した難易度高めの100点評価です。
+スキンケア・ヘアケア・服装・生活習慣が整っている印象の人ほど高得点になります。
 
 {
-  "firstImpression": "第一印象を表す一言（例：知的で落ち着いた印象）",
-  "firstImpressionSub": "補足説明（1〜2文）",
-  "faceType": "顔タイプ（例：面長・丸顔・卵形・逆三角形・四角形）",
-  "ageType": "見た目年齢タイプ（例：実年齢より若く見える）",
-  "overallType": "総合タイプ（例：知的クールビューティー）",
-  "overallTypeSub": "総合タイプの補足（1〜2文）",
-  "scores": {
-    "knowledge": 整数1〜5,
-    "friendly": 整数1〜5,
-    "cool": 整数1〜5,
-    "sexy": 整数1〜5,
-    "childlike": 整数1〜5,
-    "soft": 整数1〜5,
-    "sharp": 整数1〜5,
-    "elegant": 整数1〜5,
-    "photogenic": 整数1〜5
+  "charmScore": 72,
+  "scoreRank": "A",
+  "scoreComment": "スコアに対する一言コメント",
+  "firstImpression": "第一印象の一文",
+  "firstImpressionSub": "補足説明",
+  "analysis": {
+    "cleanliness": { "score": 80, "comment": "清潔感分析コメント" },
+    "charm": { "score": 75, "comment": "魅力分析コメント" },
+    "photogenic": { "score": 70, "comment": "写真映え分析コメント" },
+    "atmosphere": { "score": 78, "comment": "雰囲気分析コメント" },
+    "friendly": { "score": 85, "comment": "親しみやすさコメント" },
+    "luxury": { "score": 65, "comment": "高級感コメント" },
+    "ageImpression": { "score": 72, "comment": "年齢印象コメント（実年齢より若く/老けて見えるなど）" }
   },
-  "parts": {
-    "eye": { "name": "目のタイプ名", "desc": "特徴の説明" },
-    "brow": { "name": "眉のタイプ名", "desc": "特徴の説明" },
-    "nose": { "name": "鼻のタイプ名", "desc": "特徴の説明" },
-    "mouth": { "name": "口のタイプ名", "desc": "特徴の説明" },
-    "outline": { "name": "輪郭のタイプ名", "desc": "特徴の説明" }
-  },
-  "balance": {
-    "outline": "輪郭バランスの評価",
-    "santei": "三庭比率の評価",
-    "cheek": "頬骨バランスの評価",
-    "symmetry": "左右対称性の評価",
-    "gravity": "重心の評価",
-    "eline": "Eラインの評価",
-    "profile": "横顔の評価",
-    "photogenic": "フォトジェニック度の評価"
-  },
-  "impression": {
-    "first": "第一印象の詳細",
-    "type": "印象タイプ",
-    "strength": "印象の強み",
-    "weak": "印象の弱点"
-  },
-  "strengths": ["強み1", "強み2", "強み3"],
-  "improvements": ["改善点1", "改善点2", "改善点3"],
-  "styles": ["似合うスタイル1", "似合うスタイル2", "似合うスタイル3"],
+  "improvements": [
+    { "priority": 1, "title": "改善項目タイトル", "detail": "具体的な改善提案" },
+    { "priority": 2, "title": "改善項目タイトル", "detail": "具体的な改善提案" },
+    { "priority": 3, "title": "改善項目タイトル", "detail": "具体的な改善提案" }
+  ],
   "advice": {
-    "angle": "ベストアングルのアドバイス",
-    "avoidAngle": "避けるべきアングル",
-    "expression": "表情のアドバイス",
-    "light": "ライティングのアドバイス",
-    "background": "背景のアドバイス",
-    "faceWork": "フェイスワークのアドバイス"
-  }
+    "impression": "印象改善アドバイス",
+    "cleanliness": "清潔感向上アドバイス",
+    "photo": "写真写り改善アドバイス",
+    "skin": "肌印象改善アドバイス",
+    "atmosphere": "雰囲気演出アドバイス",
+    "charm": "魅力度向上アドバイス"
+  },
+  "scoreUpTips": [
+    "スコアを上げるための具体的なTips1",
+    "Tips2",
+    "Tips3"
+  ]
 }`
 
 export async function analyzeImage(base64Image, mimeType) {
@@ -88,7 +75,7 @@ export async function analyzeImage(base64Image, mimeType) {
             },
             {
               type: 'text',
-              text: 'この顔写真を詳細に診断してください。JSONのみ返してください。',
+              text: 'この写真を詳細に分析してください。JSONのみ返してください。',
             },
           ],
         },
