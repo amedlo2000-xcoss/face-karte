@@ -85,7 +85,7 @@ export async function analyzeImage(base64Image, mimeType) {
       'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       max_tokens: 3000,
       response_format: { type: 'json_object' },
       messages: [
