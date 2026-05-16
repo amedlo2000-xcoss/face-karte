@@ -34,7 +34,7 @@ export default function CharmResultCard({ data, imageDataUrl }) {
     data?.scoreComment ??
     "全体的に清潔感と親しみやすさが強く、初対面で安心感を与えやすい印象です。表情や髪型を整えることで、さらに魅力が伝わりやすくなります。";
   const harshComment =
-    "印象は悪くありませんが、現状では"無難"に見えやすいです。表情・髪型・姿勢のどれかを改善しないと、強い印象には残りにくいです。";
+    '印象は悪くありませんが、現状では「無難」に見えやすいです。表情・髪型・姿勢のどれかを改善しないと、強い印象には残りにくいです。';
 
   const adviceItems = data?.improvements
     ? data.improvements.slice(0, 3).map((imp) => ({
