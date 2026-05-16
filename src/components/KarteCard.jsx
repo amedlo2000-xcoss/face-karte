@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react'
+import { cropPart } from '../utils/cropFace'
+
 const GOLD = '#c9a96e'
 const GOLD_LIGHT = '#f0ddb0'
 const GOLD_DARK = '#a07840'
@@ -94,6 +97,21 @@ function SectionTitle({ children }) {
 }
 
 export default function KarteCard({ data, karteRef, imageDataUrl }) {
+  const [partImages, setPartImages] = useState({})
+
+  useEffect(() => {
+    if (!imageDataUrl || !data) return
+    const keys = ['eye', 'brow', 'nose', 'mouth', 'skin', 'outline', 'hair', 'faceline']
+    Promise.all(
+      keys.map(async (key) => {
+        const cropped = await cropPart(imageDataUrl, key)
+        return [key, cropped]
+      })
+    ).then((results) => {
+      setPartImages(Object.fromEntries(results))
+    })
+  }, [imageDataUrl, data])
+
   if (!data) return null
 
   const rank = data.scoreRank ?? 'B'
@@ -273,17 +291,28 @@ export default function KarteCard({ data, karteRef, imageDataUrl }) {
       <div style={{ padding: '0 14px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
         {Object.entries(data.parts ?? {}).map(([key, val]) => (
           <div key={key} style={{
-            background: GOLD_BG,
-            border: `1px solid ${GOLD_LIGHT}`,
-            borderRadius: 6,
-            padding: '8px 10px',
+            background: '#fff',
+            border: '0.5px solid #e8d5a3',
+            borderRadius: 10,
+            overflow: 'hidden',
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 }}>
-              <span style={{ fontSize: 10, color: GOLD_DARK, fontWeight: 700 }}>{val?.label ?? key}</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: GOLD_DARK }}>{val?.score}</span>
+            {partImages[key] && (
+              <img
+                src={partImages[key]}
+                alt={val?.label ?? key}
+                style={{ width: '100%', height: 80, objectFit: 'cover', display: 'block' }}
+              />
+            )}
+            <div style={{ padding: '8px 12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                <span style={{ fontSize: 13, fontWeight: 500, color: '#222' }}>{val?.label ?? key}</span>
+                <span style={{ fontSize: 13, color: GOLD, fontWeight: 500 }}>{val?.score}</span>
+              </div>
+              <div style={{ height: 3, background: '#f0e6cc', borderRadius: 2, marginBottom: 6 }}>
+                <div style={{ height: 3, width: `${val?.score ?? 0}%`, background: GOLD, borderRadius: 2 }} />
+              </div>
+              <div style={{ fontSize: 11, color: '#888', lineHeight: 1.5 }}>{val?.comment}</div>
             </div>
-            <ScoreBar score={val?.score} />
-            <div style={{ fontSize: 10, color: '#666', marginTop: 5, lineHeight: 1.5 }}>{val?.comment}</div>
           </div>
         ))}
       </div>
