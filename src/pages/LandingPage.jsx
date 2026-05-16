@@ -95,7 +95,7 @@ export default function LandingPage() {
             {/* モデル画像（なければグラデで代替） */}
             <div style={s.modelImgWrap}>
               <img
-                src="/images/charm-female-model.jpg"
+                src="/images/charm-female-model.png"
                 alt="AI診断モデル"
                 style={s.modelImg}
                 onError={e => { e.currentTarget.style.display = 'none' }}
